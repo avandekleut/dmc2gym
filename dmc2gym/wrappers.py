@@ -112,7 +112,6 @@ class DMCWrapper(core.Env):
         return obs
 
     def _convert_action(self, action):
-        action = action.clip(self._norm_action_space.low, self._norm_action_space.high)
         action = action.astype(np.float64)
         true_delta = self._true_action_space.high - self._true_action_space.low
         norm_delta = self._norm_action_space.high - self._norm_action_space.low
@@ -139,6 +138,7 @@ class DMCWrapper(core.Env):
         self._observation_space.seed(seed)
 
     def step(self, action):
+        action = action.clip(self._norm_action_space.low, self._norm_action_space.high)
         assert self._norm_action_space.contains(action)
         action = self._convert_action(action)
         assert self._true_action_space.contains(action)
