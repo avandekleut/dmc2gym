@@ -85,11 +85,11 @@ class DMCWrapper(core.Env):
             self._observation_space = _spec_to_box(
                 self._env.observation_spec().values()
             )
-            
+
         self._state_space = _spec_to_box(
                 self._env.observation_spec().values()
         )
-        
+
         self.current_state = None
 
         # set seed
@@ -112,6 +112,7 @@ class DMCWrapper(core.Env):
         return obs
 
     def _convert_action(self, action):
+        action = action.clip(self._norm_action_space.low, self._norm_action_space.high)
         action = action.astype(np.float64)
         true_delta = self._true_action_space.high - self._true_action_space.low
         norm_delta = self._norm_action_space.high - self._norm_action_space.low
